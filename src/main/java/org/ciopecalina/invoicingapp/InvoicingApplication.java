@@ -4,9 +4,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.ciopecalina.invoicingapp.models.*;
-import org.ciopecalina.invoicingapp.models.User;
-import org.ciopecalina.invoicingapp.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -33,9 +30,9 @@ public class InvoicingApplication implements CommandLineRunner {
 //                .createNativeQuery("select id, email, password, approved, is_admin from users where email = :email", User.class)
 //                .setParameter("email", "alina@gmail.com")
 //                .getSingleResult();
-
-        Client client = entityManager.find(Client.class, 1L);
-        System.out.println(client);
+//
+//        Client client = entityManager.find(Client.class, 1L);
+//        System.out.println(client);
 
     }
 }

@@ -1,13 +1,14 @@
 package org.ciopecalina.invoicingapp.models;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Set;
 
 @Getter
 @Setter
-@ToString
+@ToString( exclude = {"user"})
 @Entity
 @Table(name = "invoices")
 public class Invoice {
@@ -22,26 +23,26 @@ public class Invoice {
     private String number;
 
     @ManyToOne
-    @JoinColumn(name = "company_id")
-    private Company company;
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "client_id")
-    private Client client;
+    @Column(name = "client_name")
+    private Integer clientName;
 
     @Column(name = "date")
-    private Date date;
+    private LocalDate date;
 
-    @Column(name = "total")
-    private Double total;
-
-    @Column(name = "total_vat")
-    private Double totalVat;
+    @Column(name = "total_with_vat")
+    private Double totalWithVat;
 
     @Column(name = "total_no_vat")
     private Double totalNoVat;
 
+    @Column(name = "vat")
+    private Double vat;
+
     @OneToMany(mappedBy = "invoice")
+    @JsonBackReference
     private Set<InvoiceProduct> invoiceProducts;
 
 }

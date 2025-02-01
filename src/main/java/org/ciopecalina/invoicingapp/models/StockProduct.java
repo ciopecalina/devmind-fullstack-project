@@ -1,12 +1,16 @@
 package org.ciopecalina.invoicingapp.models;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.util.Set;
 
 @Getter
 @Setter
-@ToString
+@ToString( exclude = {"user"})
 @Entity
 @Table(name = "stock_products")
 public class StockProduct {
@@ -15,14 +19,14 @@ public class StockProduct {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "company_id")
-    private Company company;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(name = "name")
     private String name;
 
     @Column(name = "uom")
-    private String unitOfMeasurement;
+    private String uom;
 
     @Column(name = "quantity")
     private Double quantity;
@@ -30,8 +34,8 @@ public class StockProduct {
     @Column(name = "unit_price")
     private Double unitPrice;
 
-    @Column(name = "total_vat")
-    private Double totalVat;
+    @Column(name = "total_with_vat")
+    private Double totalWithVat;
 
     @Column(name = "total_no_vat")
     private Double totalNoVat;
@@ -39,9 +43,15 @@ public class StockProduct {
     @Column(name = "vat")
     private Double vat;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "stockProduct")
     private Set<InvoiceProduct> invoiceProducts;
 
-    @OneToMany(mappedBy = "stockProduct")
-    private Set<StockAdjustment> stockAdjustments;
+    public void calculateTotals() {
+        if (unitPrice != null && quantity != null) {
+            totalNoVat = unitPrice * quantity;
+            vat = totalNoVat * 0.19;
+            totalWithVat = totalNoVat + vat;
+        }
+    }
 }
