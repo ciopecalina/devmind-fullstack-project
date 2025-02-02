@@ -8,7 +8,7 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString( exclude = {"stock_product"})
+@ToString(exclude = {"invoice", "stockProduct"})
 @Entity
 @Table(name = "invoice_products")
 public class InvoiceProduct {

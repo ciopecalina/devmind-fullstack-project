@@ -1,6 +1,7 @@
 package org.ciopecalina.invoicingapp.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +11,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-@ToString( exclude = {"user"})
+@ToString(exclude = {"user", "invoiceProducts"})
 @Entity
 @Table(name = "stock_products")
 public class StockProduct {
@@ -43,7 +44,7 @@ public class StockProduct {
     @Column(name = "vat")
     private Double vat;
 
-    @JsonBackReference
+    @JsonIgnore
     @OneToMany(mappedBy = "stockProduct")
     private Set<InvoiceProduct> invoiceProducts;
 

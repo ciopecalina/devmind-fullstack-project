@@ -1,14 +1,17 @@
 package org.ciopecalina.invoicingapp.models;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.util.Set;
 
 @Getter
 @Setter
 @Entity
+@ToString(exclude = {"stockProducts", "invoices"})
 @Table(name = "users")
 public class User {
     @Id
@@ -42,12 +45,13 @@ public class User {
     @Column(name = "bank")
     private String bank;
 
-//    @JsonManagedReference
-    @OneToMany(mappedBy = "user")
+    //    @JsonManagedReference
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<StockProduct> stockProducts;
 
-
-//    @JsonManagedReference
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    //    @JsonManagedReference
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Invoice> invoices;
 }
