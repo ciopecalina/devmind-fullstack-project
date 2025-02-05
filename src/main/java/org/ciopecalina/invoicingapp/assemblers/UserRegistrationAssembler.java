@@ -23,7 +23,6 @@ public class UserRegistrationAssembler implements RepresentationModelAssembler<U
         );
     }
 
-
     public List<UserRegistrationDto> toModelList(List<User> entities) {
         return entities.stream().map(this::toModel).toList();
     }

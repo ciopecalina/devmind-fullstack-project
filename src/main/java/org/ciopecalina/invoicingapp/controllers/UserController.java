@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RequestMapping("/users")
 @RestController
 @RequiredArgsConstructor
 public class UserController {
@@ -19,13 +20,13 @@ public class UserController {
     private final UserAssembler userAssembler;
     private final UserRegistrationAssembler userRegistrationAssembler;
 
-    @GetMapping("/users")
+    @GetMapping("/all-users")
     public ResponseEntity<List<UserDto>> getUsersByIdOrderedDesc() {
         List<User> users = userService.getUsersOrderByIdDesc();
         return ResponseEntity.ok(userAssembler.toModelList(users));
     }
 
-    @DeleteMapping("/users/{is}/delete")
+    @DeleteMapping("/users/delete/{is}")
     public ResponseEntity<Void> deleteUser(@PathVariable Integer id) {
         boolean isDeleted = userService.deleteUserById(id);
         if (isDeleted) {
@@ -50,7 +51,7 @@ public class UserController {
         return ResponseEntity.ok(userDto);
     }
 
-    @PutMapping("/users/{id}/approve")
+    @PutMapping("/users/approve/{id}")
     public ResponseEntity<String> approveUser(@PathVariable Integer id) {
         boolean isApproved = userService.approveUser(id);
 
