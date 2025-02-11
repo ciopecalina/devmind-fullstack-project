@@ -2,7 +2,7 @@
 const StockProductsComponent = () => {
 return (
     <>
-        <p>Products</p>
+        <p>Products components</p>
     </>
 )
 }

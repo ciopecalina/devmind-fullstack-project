@@ -6,9 +6,6 @@ import org.ciopecalina.invoicingapp.dtos.UserResponseDto;
 import org.ciopecalina.invoicingapp.dtos.UserSecurityDto;
 import org.ciopecalina.invoicingapp.models.User;
 import org.ciopecalina.invoicingapp.repositories.UserRepository;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +25,9 @@ public class UserService {
     }
 
     public Optional<UserSecurityDto> getUserByEmailAndPassword(String email, String password) {
-        return userRepository.findByEmailAndPassword(email, password);
+        return userRepository.findByEmail(email)
+                .filter(user -> passwordEncoder.matches(password, user.getPassword()))
+                .map(user -> new UserSecurityDto(user.getEmail(), user.getPassword(), user.getIsApproved(), user.getIsAdmin()));
     }
 
     @Transactional
@@ -73,6 +72,6 @@ public class UserService {
 
         User savedUser = userRepository.save(newUser);
 
-        return new UserResponseDto(savedUser.getName(), savedUser.getEmail(), savedUser.getIsApproved());
+        return new UserResponseDto(savedUser.getName(), savedUser.getIsApproved(), savedUser.getIsAdmin());
     }
 }

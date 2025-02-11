@@ -1,5 +1,6 @@
 package org.ciopecalina.invoicingapp.configuration;
 
+import org.ciopecalina.invoicingapp.dtos.UserSecurityDto;
 import org.ciopecalina.invoicingapp.repositories.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +10,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -18,14 +20,14 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService(UserRepository userRepository) {
         return email -> userRepository.findByEmail(email)
-                .map(user -> new org.ciopecalina.invoicingapp.dtos.UserSecurityDto(
-                        user.getEmail(), user.getPassword(), user.getIsApproved()))
-                .orElseThrow(() -> new org.springframework.security.core.userdetails.UsernameNotFoundException("User not found"));
+                .map(user -> new UserSecurityDto(user.getEmail(), user.getPassword(), user.getIsApproved(), user.getIsAdmin()))
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/register", "/login").permitAll()
                         .anyRequest().authenticated()

@@ -1,18 +1,30 @@
-import React from "react";
+import React, {useState} from "react";
 import {Avatar, Box, Button, Container, Paper, TextField, Typography} from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import {useNavigate} from "react-router-dom";
 import backgroundImage from "../background.jpg";
+import {login} from "../api/InvoicingAppApi.js";
 
-
-const SigninComponent = () => {
+const LoginComponent = () => {
     const navigate = useNavigate();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log("Sign in submitted");
-        navigate("user/invoices");
+        setError("");
+
+        try {
+            const userData = await login(email, password);
+            console.log("Login successful:", userData);
+            navigate("/invoices");
+        } catch (err) {
+            console.error("Login error:", err.message);
+            setError("Invalid email or password");
+        }
     };
+
 
     return (
         <Box
@@ -59,10 +71,30 @@ const SigninComponent = () => {
                         <LockOutlinedIcon/>
                     </Avatar>
                     <Box component="form" onSubmit={handleSubmit} noValidate sx={{mt: 2}}>
-                        <TextField placeholder="Enter username" fullWidth required autoFocus sx={{mb: 2}}/>
-                        <TextField placeholder="Enter password" fullWidth required type="password"/>
+                        <TextField
+                            placeholder="Enter email"
+                            fullWidth
+                            required
+                            autoFocus
+                            sx={{mb: 2}}
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                        <TextField
+                            placeholder="Enter password"
+                            fullWidth
+                            required
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                        {error && (
+                            <Typography color="error" variant="body2" textAlign="center" mt={1}>
+                                {error}
+                            </Typography>
+                        )}
                         <Button type="submit" variant="contained" fullWidth sx={{mt: 2}}>
-                            Sign In
+                            Log In
                         </Button>
                     </Box>
                     <Box textAlign="center" mt={1}>
@@ -88,4 +120,4 @@ const SigninComponent = () => {
     );
 };
 
-export default SigninComponent;
+export default LoginComponent;

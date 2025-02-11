@@ -49,7 +49,7 @@ public class UserController {
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        return ResponseEntity.ok(new UserResponseDto(user.getEmail(), user.getEmail(), user.getIsApproved()));
+        return ResponseEntity.ok(new UserResponseDto(user.getUsername(), user.getIsApproved(), user.getIsAdmin()));
     }
 
     @PutMapping("admin/approve/{id}")

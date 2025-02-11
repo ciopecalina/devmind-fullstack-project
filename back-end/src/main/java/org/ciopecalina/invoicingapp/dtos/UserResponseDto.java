@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class UserResponseDto {
-    private String name;
     private String email;
     private Boolean isApproved;
+    private Boolean isAdmin;
 }

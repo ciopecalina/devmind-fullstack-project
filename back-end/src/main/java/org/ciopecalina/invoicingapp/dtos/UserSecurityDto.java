@@ -14,6 +14,7 @@ public class UserSecurityDto implements UserDetails {
     private String email;
     private String password;
     private Boolean isApproved;
+    private Boolean isAdmin;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
