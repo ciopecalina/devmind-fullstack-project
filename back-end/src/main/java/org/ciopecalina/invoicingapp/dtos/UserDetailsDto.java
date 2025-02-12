@@ -2,15 +2,18 @@ package org.ciopecalina.invoicingapp.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
-public class UserResponseDto {
+@NoArgsConstructor
+public class UserDetailsDto {
     private Integer id;
-    private String email;
     private String name;
-    private Boolean isApproved;
-    private Boolean isAdmin;
+    private String fCode;
+    private String regNo;
+    private String iban;
+    private String bank;
 }

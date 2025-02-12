@@ -17,7 +17,12 @@ const LoginComponent = () => {
 
         try {
             const userData = await login(email, password);
-            console.log("Login successful:", userData);
+
+            localStorage.setItem("user", JSON.stringify(userData));
+
+            console.log("Saved to localStorage:", localStorage.getItem("user"))
+
+           // console.log("Login successful:", userData);
             navigate("/invoices");
         } catch (err) {
             console.error("Login error:", err.message);

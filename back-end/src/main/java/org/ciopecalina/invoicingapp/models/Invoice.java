@@ -1,6 +1,7 @@
 package org.ciopecalina.invoicingapp.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +26,7 @@ public class Invoice {
     @Column(name = "no")
     private String number;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -44,8 +46,7 @@ public class Invoice {
     @Column(name = "vat")
     private Double vat;
 
-    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)
-    @JsonIgnore
+    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<InvoiceProduct> invoiceProducts;
 
 }

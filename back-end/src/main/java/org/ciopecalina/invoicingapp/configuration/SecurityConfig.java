@@ -4,6 +4,7 @@ import org.ciopecalina.invoicingapp.dtos.UserSecurityDto;
 import org.ciopecalina.invoicingapp.repositories.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -19,22 +20,33 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService(UserRepository userRepository) {
-        return email -> userRepository.findByEmail(email)
-                .map(user -> new UserSecurityDto(user.getEmail(), user.getPassword(), user.getIsApproved(), user.getIsAdmin()))
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return email -> {
+            System.out.println("Authenticating user: " + email);
+            return userRepository.findByEmail(email)
+                    .map(user -> new UserSecurityDto(
+                            user.getId(),
+                            user.getEmail(),
+                            user.getName(),
+                            user.getPassword(),
+                            user.getIsApproved(),
+                            user.getIsAdmin()
+                    ))
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        };
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(Customizer.withDefaults())
+                .csrf(csrf -> csrf.disable()) // Deactivated to use Postman
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/register", "/login").permitAll()
+                        .requestMatchers( "/invoices/**").hasRole("USER")
+                        .requestMatchers( "/users/**").hasRole("USER")
                         .anyRequest().authenticated()
                 )
-                .httpBasic(Customizer.withDefaults())
-                .csrf(csrf -> csrf.disable())
-                .formLogin(Customizer.withDefaults());
+                .httpBasic(Customizer.withDefaults());
 
         return http.build();
     }

@@ -1,26 +1,30 @@
-import React from "react";
-import { Outlet, useNavigate } from "react-router-dom";
-import { DashboardLayout } from "@toolpad/core/DashboardLayout";
-import { PageContainer } from "@toolpad/core/PageContainer";
-import { AuthenticationContext, SessionContext } from "@toolpad/core/AppProvider";
-import { Button, Box, Typography, Avatar } from "@mui/material";
+import React, {useEffect} from "react";
+import {Outlet, useNavigate} from "react-router-dom";
+import {DashboardLayout} from "@toolpad/core/DashboardLayout";
+import {PageContainer} from "@toolpad/core/PageContainer";
+import {AuthenticationContext, SessionContext} from "@toolpad/core/AppProvider";
+import {Avatar, Box, Button, Typography} from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
-
-const demoSession = {
-    user: {
-        name: "User name",
-        email: "email@outlook.com",
-    },
-};
 
 const DashboardLayoutWrapper = () => {
     const navigate = useNavigate();
-    const [session, setSession] = React.useState(demoSession);
+    const [session, setSession] = React.useState(null);
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+            setSession({user: JSON.parse(storedUser)});
+        }
+    }, []);
 
     const authentication = React.useMemo(
         () => ({
-            signIn: () => setSession(demoSession),
+            signIn: (userData) => {
+                localStorage.setItem("user", JSON.stringify(userData));
+                setSession({user: userData});
+            },
             signOut: () => {
+                localStorage.removeItem("user");
                 setSession(null);
                 navigate("/login");
             },
@@ -34,8 +38,8 @@ const DashboardLayoutWrapper = () => {
                 <DashboardLayout
                     slots={{
                         toolbarAccount: () => (
-                            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                                <Avatar src={session?.user.image} alt={session?.user.name} />
+                            <Box sx={{display: "flex", alignItems: "center", gap: 2}}>
+                                <Avatar src={session?.user.image} alt={session?.user.name}/>
                                 <Box>
                                     <Typography variant="body1">{session?.user.name}</Typography>
                                     <Typography variant="body2" color="textSecondary">
@@ -44,7 +48,7 @@ const DashboardLayoutWrapper = () => {
                                 </Box>
                                 <Button
                                     variant="contained"
-                                    startIcon={<LogoutIcon />}
+                                    startIcon={<LogoutIcon/>}
                                     onClick={authentication.signOut}
                                 >
                                     Logout
@@ -53,8 +57,8 @@ const DashboardLayoutWrapper = () => {
                         ),
                     }}
                 >
-                    <PageContainer breadcrumbs={[]} sx={{ "& .MuiTypography-root": { color: "dodgerblue" } }}>
-                        <Outlet />
+                    <PageContainer breadcrumbs={[]} sx={{"& .MuiTypography-root": {color: "dodgerblue"}}}>
+                        <Outlet/>
                     </PageContainer>
                 </DashboardLayout>
             </SessionContext.Provider>

@@ -1,5 +1,7 @@
 const BASE_API = "http://localhost:8080";
 
+//users
+
 export const login = async (email, password) => {
     const response = await fetch("http://localhost:8080/me", {
         method: "GET",
@@ -32,8 +34,21 @@ export const register = async (userData) => {
 
 export const getUsersByIdOrderedDesc = () => fetch(`${BASE_API}/users/all-users`);
 
-export const getUserByEmailAndName = (email, name) => fetch(`${BASE_API}/users/get-user/${email}/${name}`);
+export const getUserDetailsByEmail = (email) => fetch(`${BASE_API}/users/get-user-details/${email}`);
 
 export const deleteUser = (id) => fetch(`${BASE_API}users/delete/${id}`);
 
 export const approveUser = (id) => fetch(`${BASE_API}users/approve/${id}`);
+
+//invoices
+export const getInvoices = async (email, password, id) => {
+    const response = await fetch(`${BASE_API}/invoices/all/${id}`, {
+        method: "GET",
+        headers: {
+            "Authorization": "Basic " + btoa(`${email}:${password}`),
+            "Content-Type": "application/json",
+        },
+    });
+
+    return response.json();
+};

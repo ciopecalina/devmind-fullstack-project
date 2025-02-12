@@ -1,6 +1,7 @@
 package org.ciopecalina.invoicingapp.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +9,7 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString(exclude = {"invoice", "stockProduct"})
+//@ToString(exclude = {"invoice", "stockProduct"})
 @Entity
 @Table(name = "invoice_products")
 public class InvoiceProduct {
@@ -16,11 +17,12 @@ public class InvoiceProduct {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    @ManyToOne
     @JoinColumn(name = "invoice_id")
     private Invoice invoice;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stock_product_id")
     private StockProduct stockProduct;

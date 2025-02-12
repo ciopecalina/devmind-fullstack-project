@@ -2,10 +2,7 @@ package org.ciopecalina.invoicingapp.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.ciopecalina.invoicingapp.assemblers.UserAssembler;
-import org.ciopecalina.invoicingapp.dtos.UserDto;
-import org.ciopecalina.invoicingapp.dtos.UserRegistrationDto;
-import org.ciopecalina.invoicingapp.dtos.UserResponseDto;
-import org.ciopecalina.invoicingapp.dtos.UserSecurityDto;
+import org.ciopecalina.invoicingapp.dtos.*;
 import org.ciopecalina.invoicingapp.models.User;
 import org.ciopecalina.invoicingapp.services.UserService;
 import org.springframework.http.HttpStatus;
@@ -14,6 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequestMapping("/")
 @RestController
@@ -49,7 +47,7 @@ public class UserController {
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        return ResponseEntity.ok(new UserResponseDto(user.getUsername(), user.getIsApproved(), user.getIsAdmin()));
+        return ResponseEntity.ok(new UserResponseDto(user.getId(),user.getUsername(), user.getName(), user.getIsApproved(), user.getIsAdmin()));
     }
 
     @PutMapping("admin/approve/{id}")
@@ -61,5 +59,14 @@ public class UserController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("users/get-user-details/{email}")
+    public ResponseEntity<UserDetailsDto> getUserByEmail(@PathVariable String email) {
+        System.out.println("Received request for email: " + email);
+
+        Optional<UserDetailsDto> userDto = userService.getUserDetailsByEmail(email);
+        return userDto.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }

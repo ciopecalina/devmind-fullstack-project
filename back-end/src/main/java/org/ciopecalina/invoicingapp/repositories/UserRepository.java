@@ -1,5 +1,6 @@
 package org.ciopecalina.invoicingapp.repositories;
 
+import org.ciopecalina.invoicingapp.dtos.UserDetailsDto;
 import org.ciopecalina.invoicingapp.dtos.UserSecurityDto;
 import org.ciopecalina.invoicingapp.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;

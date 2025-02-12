@@ -1,10 +1,12 @@
+import React, { useEffect, useState } from "react";
 
 const InvoicesComponent = () => {
+
     return (
-        <>
-            <p>Invoices Component</p>
-        </>
-    )
-}
+        <div>
+            <h2>Invoices</h2>
+        </div>
+    );
+};
 
 export default InvoicesComponent;

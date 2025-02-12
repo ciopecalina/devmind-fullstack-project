@@ -1,9 +1,9 @@
 package org.ciopecalina.invoicingapp.services;
 
 import lombok.RequiredArgsConstructor;
+import org.ciopecalina.invoicingapp.dtos.UserDetailsDto;
 import org.ciopecalina.invoicingapp.dtos.UserRegistrationDto;
 import org.ciopecalina.invoicingapp.dtos.UserResponseDto;
-import org.ciopecalina.invoicingapp.dtos.UserSecurityDto;
 import org.ciopecalina.invoicingapp.models.User;
 import org.ciopecalina.invoicingapp.repositories.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,14 +20,20 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public List<User> getUsersOrderByIdDesc() {
-        return userRepository.findAllByIsAdminFalseOrderByIdDesc();
+    public Optional<UserDetailsDto> getUserDetailsByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .map(user -> new UserDetailsDto(
+                        user.getId(),
+                        user.getName(),
+                        user.getFCode(),
+                        user.getRegNo(),
+                        user.getIban(),
+                        user.getBank()
+                ));
     }
 
-    public Optional<UserSecurityDto> getUserByEmailAndPassword(String email, String password) {
-        return userRepository.findByEmail(email)
-                .filter(user -> passwordEncoder.matches(password, user.getPassword()))
-                .map(user -> new UserSecurityDto(user.getEmail(), user.getPassword(), user.getIsApproved(), user.getIsAdmin()));
+    public List<User> getUsersOrderByIdDesc() {
+        return userRepository.findAllByIsAdminFalseOrderByIdDesc();
     }
 
     @Transactional
@@ -69,9 +75,10 @@ public class UserService {
         newUser.setBank(userRegistrationDto.getBank());
         newUser.setIsApproved(false);
         newUser.setIsAdmin(false);
+        newUser.setId(null);
 
         User savedUser = userRepository.save(newUser);
 
-        return new UserResponseDto(savedUser.getName(), savedUser.getIsApproved(), savedUser.getIsAdmin());
+        return new UserResponseDto(savedUser.getId(), savedUser.getName(), savedUser.getName(), savedUser.getIsApproved(), savedUser.getIsAdmin());
     }
 }
