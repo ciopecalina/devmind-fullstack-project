@@ -25,4 +25,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     <S extends User> S save(S entity);
 
     Optional<User> findByEmail(String email);
+    User findUserByName(String name);
 }

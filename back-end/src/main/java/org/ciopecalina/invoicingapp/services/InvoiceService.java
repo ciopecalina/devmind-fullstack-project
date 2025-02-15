@@ -12,8 +12,10 @@ import java.util.List;
 @Service
 public class InvoiceService {
     private final InvoiceRepository invoiceRepository;
-
     public List<Invoice> getInvoicesByUserId(Integer userId) {
         return invoiceRepository.findAllByUserId(userId);
+    }
+    public Invoice getInvoiceById(Integer invoiceId) {
+        return invoiceRepository.findInvoiceById(invoiceId);
     }
 }

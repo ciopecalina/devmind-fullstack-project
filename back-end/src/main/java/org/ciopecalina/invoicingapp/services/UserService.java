@@ -36,6 +36,10 @@ public class UserService {
         return userRepository.findAllByIsAdminFalseOrderByIdDesc();
     }
 
+    public User getUserByName(String name) {
+        return userRepository.findUserByName(name);
+    }
+
     @Transactional
     public boolean deleteUserById(Integer id) {
         if (userRepository.existsById(id)) {

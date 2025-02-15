@@ -41,7 +41,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable()) // Deactivated to use Postman
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/register", "/login").permitAll()
+                        .requestMatchers("/register", "/login", "/download-document/**").permitAll()
                         .requestMatchers( "/invoices/**").hasRole("USER")
                         .requestMatchers( "/users/**").hasRole("USER")
                         .anyRequest().authenticated()

@@ -4,7 +4,7 @@ import org.ciopecalina.invoicingapp.services.WordDocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
@@ -17,10 +17,11 @@ public class DocumentController {
     @Autowired
     private WordDocumentService wordService;
 
-    //http://localhost:8080/download-document?invoiceSeries=DEV&invoiceNo=12345
-    @GetMapping("/download-document")
-    public ResponseEntity<byte[]> downloadDocument(@RequestParam String invoiceSeries, @RequestParam String invoiceNo) throws IOException {
-        String wordFilePath = wordService.createDocument(invoiceSeries, invoiceNo);
+    //http://localhost:8080/download-document?id=2
+    @GetMapping("/download-document/{id}")
+    public ResponseEntity<byte[]> downloadDocument( @PathVariable Integer id) throws IOException {
+
+        String wordFilePath = wordService.createDocument(id);
 
         if (wordFilePath == null) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
@@ -31,8 +32,9 @@ public class DocumentController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.setContentDisposition(ContentDisposition.inline().filename(wordFile.getName()).build());
+        headers.setContentDisposition(ContentDisposition.attachment().filename(wordFile.getName()).build());
 
         return new ResponseEntity<>(fileContent, headers, HttpStatus.OK);
     }
+
 }
