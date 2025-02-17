@@ -1,7 +1,6 @@
 package org.ciopecalina.invoicingapp.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.ciopecalina.invoicingapp.assemblers.UserAssembler;
 import org.ciopecalina.invoicingapp.dtos.*;
 import org.ciopecalina.invoicingapp.models.User;
 import org.ciopecalina.invoicingapp.services.UserService;
@@ -18,13 +17,18 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    private final UserAssembler userAssembler;
 
     @GetMapping("admin/all")
-    public ResponseEntity<List<UserDto>> getUsersByIdOrderedDesc() {
-        List<User> users = userService.getUsersOrderByIdDesc();
-        return ResponseEntity.ok(userAssembler.toModelList(users));
+    public ResponseEntity<List<UserApprovalDto>> getAllUsers() {
+        List<User> users = userService.getUsersByIsAdminFalse();
+
+        List<UserApprovalDto> userDtos = users.stream()
+                .map(user -> new UserApprovalDto(user.getId(), user.getName(), user.getEmail(), user.getIsApproved()))
+                .toList();
+
+        return ResponseEntity.ok(userDtos);
     }
+
 
     @DeleteMapping("admin/delete/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Integer id) {
@@ -47,7 +51,7 @@ public class UserController {
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        return ResponseEntity.ok(new UserResponseDto(user.getId(),user.getUsername(), user.getName(), user.getIsApproved(), user.getIsAdmin()));
+        return ResponseEntity.ok(new UserResponseDto(user.getId(), user.getUsername(), user.getName(), user.getIsApproved(), user.getIsAdmin()));
     }
 
     @PutMapping("admin/approve/{id}")

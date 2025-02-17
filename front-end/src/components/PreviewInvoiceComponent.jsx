@@ -1,5 +1,11 @@
+import { useState } from "react";
+
 const PreviewInvoiceComponent = () => {
-    return <div>Preview Invoice</div>;
+    return (
+        <div>
+            <p>Preview ...</p>
+        </div>
+    );
 };
 
 export default PreviewInvoiceComponent;

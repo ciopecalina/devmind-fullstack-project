@@ -1,4 +1,4 @@
-package org.ciopecalina.invoicingapp.configuration;
+package org.ciopecalina.invoicingapp.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

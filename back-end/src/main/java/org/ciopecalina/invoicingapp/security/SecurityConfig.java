@@ -1,10 +1,9 @@
-package org.ciopecalina.invoicingapp.configuration;
+package org.ciopecalina.invoicingapp.security;
 
 import org.ciopecalina.invoicingapp.dtos.UserSecurityDto;
 import org.ciopecalina.invoicingapp.repositories.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -41,8 +40,11 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable()) // Deactivated to use Postman
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/register", "/login", "/download-document/**").permitAll()
+                        .requestMatchers("/register", "/login").permitAll()
+                        .requestMatchers( "/admin/**").hasRole("ADMIN")
+                        .requestMatchers( "/document/**").hasRole("USER")
                         .requestMatchers( "/invoices/**").hasRole("USER")
+                        .requestMatchers( "/email/**").hasRole("USER")
                         .requestMatchers( "/users/**").hasRole("USER")
                         .anyRequest().authenticated()
                 )

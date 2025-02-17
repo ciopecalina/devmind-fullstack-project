@@ -32,7 +32,7 @@ public class UserService {
                 ));
     }
 
-    public List<User> getUsersOrderByIdDesc() {
+    public List<User> getUsersByIsAdminFalse() {
         return userRepository.findAllByIsAdminFalseOrderByIdDesc();
     }
 

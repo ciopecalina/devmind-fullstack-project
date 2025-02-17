@@ -24,8 +24,6 @@ public class UserSecurityDto implements UserDetails {
         Collection<? extends GrantedAuthority> authorities = isAdmin != null && isAdmin
                 ? List.of(new SimpleGrantedAuthority("ROLE_ADMIN"))
                 : List.of(new SimpleGrantedAuthority("ROLE_USER"));
-
-        System.out.println("Roluri pentru utilizator: " + email + " -> " + authorities);
         return authorities;
     }
 

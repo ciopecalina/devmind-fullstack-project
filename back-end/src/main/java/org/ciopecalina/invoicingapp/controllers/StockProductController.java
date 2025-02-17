@@ -1,11 +1,8 @@
 package org.ciopecalina.invoicingapp.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.ciopecalina.invoicingapp.assemblers.StockProductAssembler;
 import org.ciopecalina.invoicingapp.dtos.StockProductDto;
-import org.ciopecalina.invoicingapp.dtos.UserRegistrationDto;
 import org.ciopecalina.invoicingapp.models.StockProduct;
-import org.ciopecalina.invoicingapp.models.User;
 import org.ciopecalina.invoicingapp.services.StockProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +14,6 @@ import java.util.List;
 @RequestMapping("/stock-products")
 public class StockProductController {
     private final StockProductService stockProductService;
-    private final StockProductAssembler stockProductAssembler;
 
     @GetMapping("/all/{userId}")
     public ResponseEntity<List<StockProduct>> getAllStockProductsByUser(@PathVariable Integer userId) {
@@ -34,7 +30,6 @@ public class StockProductController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    //http://localhost:8080/stock-products/name/Laptop%20ASUS%20VivoBook/user/2
     @GetMapping("/name/{name}/user/{userId}")
     public ResponseEntity<StockProduct> getStockProductByNameAndUser(
             @PathVariable String name,
@@ -55,12 +50,12 @@ public class StockProductController {
         return isDeleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 
-    @PostMapping("/add-stock-product/")
-    public ResponseEntity<StockProductDto> createStockProduct(@RequestBody StockProductDto stockProductDto) {
-        StockProduct product = stockProductService.createStockProduct(stockProductDto);
-
-        StockProductDto productDto = stockProductAssembler.toModel(product);
-
-        return ResponseEntity.ok(productDto);
-    }
+//    @PostMapping("/add-stock-product/")
+//    public ResponseEntity<StockProductDto> createStockProduct(@RequestBody StockProductDto stockProductDto) {
+//        StockProduct product = stockProductService.createStockProduct(stockProductDto);
+//
+//        StockProductDto productDto = stockProductAssembler.toModel(product);
+//
+//        return ResponseEntity.ok(productDto);
+//    }
 }

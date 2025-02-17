@@ -18,14 +18,13 @@ const LoginComponent = () => {
         try {
             const userData = await login(email, password);
 
-            // Create Basic Auth Header and save to sessionStorage
             const basicAuthHeader = "Basic " + btoa(email + ":" + password);
             sessionStorage.setItem("authHeader", basicAuthHeader);
             sessionStorage.setItem("user", JSON.stringify(userData));
 
             console.log("Saved to sessionStorage:", sessionStorage.getItem("user"));
 
-            navigate("/invoices");
+            userData.isAdmin ? navigate("/admin") : navigate("/invoices");
         } catch (err) {
             console.error("Login error:", err.message);
             setError("Invalid email or password");

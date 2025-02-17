@@ -1,9 +1,7 @@
 package org.ciopecalina.invoicingapp.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.ciopecalina.invoicingapp.assemblers.StockProductAssembler;
 import org.ciopecalina.invoicingapp.models.Invoice;
-import org.ciopecalina.invoicingapp.models.StockProduct;
 import org.ciopecalina.invoicingapp.services.InvoiceService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

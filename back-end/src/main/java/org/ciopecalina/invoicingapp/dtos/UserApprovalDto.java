@@ -10,10 +10,9 @@ import org.springframework.hateoas.RepresentationModel;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDto extends RepresentationModel<UserDto> {
+public class UserApprovalDto {
     private Integer id;
     private String name;
     private String email;
     private Boolean isApproved;
-
 }
