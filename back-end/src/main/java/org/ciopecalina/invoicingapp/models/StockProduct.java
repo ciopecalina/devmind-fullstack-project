@@ -1,6 +1,5 @@
 package org.ciopecalina.invoicingapp.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -48,12 +47,4 @@ public class StockProduct {
     @JsonIgnore
     @OneToMany(mappedBy = "stockProduct")
     private Set<InvoiceProduct> invoiceProducts;
-
-    public void calculateTotals() {
-        if (unitPrice != null && quantity != null) {
-            totalNoVat = unitPrice * quantity;
-            vat = totalNoVat * 0.19;
-            totalWithVat = totalNoVat + vat;
-        }
-    }
 }

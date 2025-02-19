@@ -5,7 +5,7 @@ const getAuthHeader = () => {
     return sessionStorage.getItem("authHeader") || "";
 };
 
-// Users
+// Login
 export const login = async (email, password) => {
     const authHeader = "Basic " + btoa(`${email}:${password}`);
 
@@ -135,9 +135,99 @@ export const getAllUsers = async () => {
     }
 };
 
+//User approval
+export const approveUser = (id) => {
+    return fetch(`${BASE_API}/admin/approve/${id}`, {
+        method: "PUT",
+        headers: {
+            "Authorization": getAuthHeader(),
+            "Content-Type": "application/json",
+        },
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to approve user");
+            }
+            return response.text();
+        });
+};
 
-export const getUserDetailsByEmail = (email) => fetch(`${BASE_API}/users/get-user-details/${email}`);
+//Delete user
+export const deleteUser = async (id) => {
+    const response = await fetch(`${BASE_API}/admin/delete/${id}`, {
+        method: "DELETE",
+        headers: {
+            "Authorization": getAuthHeader(),
+        },
+    });
 
-export const deleteUser = (id) => fetch(`${BASE_API}users/delete/${id}`);
+    if (!response.ok) throw new Error("Failed to delete user");
+};
 
-export const approveUser = (id) => fetch(`${BASE_API}users/approve/${id}`);
+//Get all stock products
+export const getStockProducts = async (userId) => {
+    const response = await fetch(`${BASE_API}/stock/all/${userId}`, {
+        method: "GET",
+        headers: {
+            "Authorization": getAuthHeader(),
+            "Content-Type": "application/json",
+        },
+    });
+
+    if (!response.ok) throw new Error("Failed to fetch stock products");
+    return response.json();
+};
+
+//Delete stock product
+export const deleteStockProduct = async (productId, userId) => {
+    const response = await fetch(`${BASE_API}/stock/delete/${productId}/${userId}`, {
+        method: "DELETE",
+        headers: {
+            Authorization: getAuthHeader(),
+        },
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to delete product");
+    }
+};
+
+//Add stock product
+export const addStockProduct = async (userId, newProduct) => {
+
+    const response = await fetch(`${BASE_API}/stock/add/${userId}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": getAuthHeader(),
+        },
+        body: JSON.stringify(newProduct),
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to add product");
+    }
+
+    return await response.json();
+
+};
+
+//Get clients names
+export const getClientsNames = async (userName) => {
+    const response = await fetch(`${BASE_API}/clients/${encodeURIComponent(userName)}`, {
+        method: "GET",
+        headers: {
+            "Authorization": getAuthHeader(),
+            "Content-Type": "application/json"
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to fetch clients names");
+    }
+
+    return await response.json();
+};
+
+
+

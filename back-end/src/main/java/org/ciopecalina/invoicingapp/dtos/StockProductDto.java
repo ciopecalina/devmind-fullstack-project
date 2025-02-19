@@ -1,5 +1,6 @@
 package org.ciopecalina.invoicingapp.dtos;
 
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import org.springframework.hateoas.RepresentationModel;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class StockProductDto extends RepresentationModel<StockProductDto> {
+public class StockProductDto {
     private Integer userId;
     private String name;
     private String uom;
@@ -19,5 +20,4 @@ public class StockProductDto extends RepresentationModel<StockProductDto> {
     private Double totalWithVat;
     private Double totalNoVat;
     private Double vat;
-
 }

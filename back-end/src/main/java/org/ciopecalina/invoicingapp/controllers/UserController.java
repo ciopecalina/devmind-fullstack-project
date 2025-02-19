@@ -16,6 +16,7 @@ import java.util.Optional;
 @RestController
 @RequiredArgsConstructor
 public class UserController {
+
     private final UserService userService;
 
     @GetMapping("admin/all")
@@ -73,4 +74,11 @@ public class UserController {
         return userDto.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @GetMapping("/clients/{userName}")
+    public ResponseEntity<List<String>> getClientNames(@PathVariable String userName) {
+        List<String> clientNames = userService.getClientNames(userName);
+        return ResponseEntity.ok(clientNames);
+    }
+
 }

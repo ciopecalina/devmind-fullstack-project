@@ -38,7 +38,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(Customizer.withDefaults())
-                .csrf(csrf -> csrf.disable()) // Deactivated to use Postman
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/register", "/login").permitAll()
                         .requestMatchers( "/admin/**").hasRole("ADMIN")
@@ -46,6 +46,8 @@ public class SecurityConfig {
                         .requestMatchers( "/invoices/**").hasRole("USER")
                         .requestMatchers( "/email/**").hasRole("USER")
                         .requestMatchers( "/users/**").hasRole("USER")
+                        .requestMatchers( "/stock/**").hasRole("USER")
+                        .requestMatchers( "/clients/**").hasRole("USER")
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults());

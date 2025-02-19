@@ -37,7 +37,7 @@ const RegistrationComponent = () => {
                 throw new Error("Registration failed. Email may already be in use.");
             }
 
-            alert("Registration successful!");
+            sessionStorage.clear();
             navigate("/login");
         } catch (error) {
             setError(error.message);

@@ -1,9 +1,10 @@
 package org.ciopecalina.invoicingapp.repositories;
 
-import org.ciopecalina.invoicingapp.dtos.UserDetailsDto;
 import org.ciopecalina.invoicingapp.dtos.UserSecurityDto;
 import org.ciopecalina.invoicingapp.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,11 +18,16 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     List<User> findAllByIsAdminFalseOrderByIdDesc();
 
+
     Optional<User> findByNameIsContainingIgnoreCaseAndEmail(String name, String email);
 
     @Override
     <S extends User> S save(S entity);
 
     Optional<User> findByEmail(String email);
+
     User findUserByName(String name);
+
+    @Query("SELECT c.name FROM User c WHERE c.name <> :name")
+    List<String> findAllClientNamesExcluding(@Param("name") String name);
 }

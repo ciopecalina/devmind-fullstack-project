@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/stock-products")
+@RequestMapping("/stock")
 public class StockProductController {
     private final StockProductService stockProductService;
 
@@ -19,15 +19,6 @@ public class StockProductController {
     public ResponseEntity<List<StockProduct>> getAllStockProductsByUser(@PathVariable Integer userId) {
         List<StockProduct> products = stockProductService.getStockProductsByUserId(userId);
         return ResponseEntity.ok(products);
-    }
-
-    @GetMapping("/product/{productId}/user/{userId}")
-    public ResponseEntity<StockProduct> getStockProductByIdAndUser(
-            @PathVariable Integer productId, @PathVariable Integer userId
-    ) {
-        return stockProductService.getStockProductByIdAndUserId(productId, userId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/name/{name}/user/{userId}")
@@ -40,22 +31,14 @@ public class StockProductController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/delete/{name}/{userId}")
-    public ResponseEntity<Void> deleteStockProductByNameAndUserId(
-            @PathVariable String name,
-            @PathVariable Integer userId
-    ) {
-        boolean isDeleted = stockProductService.deleteStockProductByNameAndUserId(name, userId);
-
+    @DeleteMapping("/delete/{productId}/{userId}")
+    public ResponseEntity<Void> deleteStockProduct(@PathVariable Integer productId, @PathVariable Integer userId) {
+        boolean isDeleted = stockProductService.deleteStockProductByIdAndUserId(productId, userId);
         return isDeleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 
-//    @PostMapping("/add-stock-product/")
-//    public ResponseEntity<StockProductDto> createStockProduct(@RequestBody StockProductDto stockProductDto) {
-//        StockProduct product = stockProductService.createStockProduct(stockProductDto);
-//
-//        StockProductDto productDto = stockProductAssembler.toModel(product);
-//
-//        return ResponseEntity.ok(productDto);
-//    }
+    @PostMapping("/add/{userId}")
+    public StockProduct addStockProduct(@PathVariable Integer userId, @RequestBody StockProductDto stockProductDto) {
+        return stockProductService.addStockProduct(stockProductDto, userId);
+    }
 }

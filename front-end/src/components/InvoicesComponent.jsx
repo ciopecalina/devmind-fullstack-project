@@ -7,11 +7,13 @@ import EmailIcon from "@mui/icons-material/Email";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import NewInvoiceComponent from "./NewInvoiceComponent.jsx";
 
 const InvoicesComponent = () => {
     const [invoices, setInvoices] = useState([]);
     const [selectedInvoice, setSelectedInvoice] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         const user = JSON.parse(sessionStorage.getItem("user"));
@@ -47,7 +49,11 @@ const InvoicesComponent = () => {
     }, [selectedInvoice]);
 
     const handleAdd = () => {
-        alert("Add invoice clicked!");
+        setIsModalOpen(true);
+    };
+
+    const handleClose = () => {
+        setIsModalOpen(false);
     };
 
     const handleDelete = () => {
@@ -56,6 +62,11 @@ const InvoicesComponent = () => {
             return;
         }
         alert(`Delete invoice ${selectedInvoice.id}`);
+    };
+
+    const handleSaveInvoice = (newInvoice) => {
+        setInvoices([...invoices, newInvoice]);
+        setIsModalOpen(false);
     };
 
     return (
@@ -89,7 +100,6 @@ const InvoicesComponent = () => {
                         disabled={!selectedInvoice}>
                     Delete
                 </Button>
-
             </Box>
 
             <DataGrid
@@ -114,6 +124,9 @@ const InvoicesComponent = () => {
                     }
                 }}
             />
+            {isModalOpen && (
+                <NewInvoiceComponent open={isModalOpen} onClose={handleClose} onSave={handleSaveInvoice}/>
+            )}
         </Box>
     );
 };

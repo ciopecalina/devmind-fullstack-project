@@ -36,6 +36,10 @@ public class UserService {
         return userRepository.findAllByIsAdminFalseOrderByIdDesc();
     }
 
+    public List<String> getClientNames(String userName) {
+        return userRepository.findAllClientNamesExcluding(userName);
+    }
+
     public User getUserByName(String name) {
         return userRepository.findUserByName(name);
     }
