@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Box, Button} from "@mui/material";
 import {DataGrid} from "@mui/x-data-grid";
-import {Add, Delete, Edit} from "@mui/icons-material";
+import {Add, Delete} from "@mui/icons-material";
 import {addStockProduct, deleteStockProduct, getStockProducts} from "../api/InvoicingAppApi";
 import NewProductComponent from "./NewProductComponent.jsx";
 
@@ -70,9 +70,6 @@ const StockProductsComponent = () => {
                 >
                     Add
                 </Button>
-                <Button variant="contained" color="primary" startIcon={<Edit/>} disabled={!selectedProduct}>
-                    Edit
-                </Button>
                 <Button variant="contained" color="error" startIcon={<Delete/>} disabled={!selectedProduct}
                         onClick={handleDelete}>
                     Delete
@@ -100,16 +97,16 @@ const StockProductsComponent = () => {
                     }}
                 />
             </div>
-                {isModalOpen && (<NewProductComponent
-                        open={isModalOpen}
-                        onClose={() => {
-                            setIsModalOpen(false);
-                        }}
-                        onSave={handleSaveProduct}
-                    />
-                )}
+            {isModalOpen && (<NewProductComponent
+                    open={isModalOpen}
+                    onClose={() => {
+                        setIsModalOpen(false);
+                    }}
+                    onSave={handleSaveProduct}
+                />
+            )}
         </Box>
-);
+    );
 };
 
 export default StockProductsComponent;

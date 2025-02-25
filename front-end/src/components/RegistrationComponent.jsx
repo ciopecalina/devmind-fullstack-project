@@ -23,9 +23,9 @@ const RegistrationComponent = () => {
         const newErrors = {
             name: !formData.name.trim(),
             email: !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim()),
-            password: !formData.password.trim(),
-            fCode: !(formData.fCode.trim().length >= 6 && formData.fCode.trim().length <= 9),
-            regNo: !(formData.regNo.trim().length >= 8 && formData.regNo.trim().length <= 13),
+            password: !(formData.password.trim().length >= 5 && formData.password.trim().length <= 15),
+            fCode: !(formData.fCode.trim().length >= 2 && formData.fCode.trim().length <= 10),
+            regNo: !(formData.regNo.trim().length >= 8 && formData.regNo.trim().length <= 14),
             iban: formData.iban.trim().length !== 24,
             bank: !formData.bank.trim()
         };

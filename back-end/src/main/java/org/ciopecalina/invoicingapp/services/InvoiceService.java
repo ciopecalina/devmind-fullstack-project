@@ -6,7 +6,6 @@ import org.ciopecalina.invoicingapp.dtos.InvoiceProductDto;
 import org.ciopecalina.invoicingapp.models.Invoice;
 import org.ciopecalina.invoicingapp.models.InvoiceProduct;
 import org.ciopecalina.invoicingapp.models.User;
-import org.ciopecalina.invoicingapp.repositories.InvoiceProductRepository;
 import org.ciopecalina.invoicingapp.repositories.InvoiceRepository;
 import org.ciopecalina.invoicingapp.repositories.UserRepository;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,6 @@ import java.util.Set;
 public class InvoiceService {
     private final InvoiceRepository invoiceRepository;
     private final UserRepository userRepository;
-    private final InvoiceProductRepository invoiceProductRepository;
 
     public List<Invoice> getInvoicesByUserId(Integer userId) {
         return invoiceRepository.findAllByUserId(userId);

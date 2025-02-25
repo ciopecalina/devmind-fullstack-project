@@ -52,18 +52,4 @@ public class StockProductService {
         return stockProductRepository.save(newProduct);
     }
 
-
-    @Transactional
-    public boolean deleteStockProductByNameAndUserId(String name, Integer userId) {
-        Optional<StockProduct> optionalProduct = stockProductRepository.findByNameIsContainingIgnoreCaseAndUserId(name, userId);
-        if (optionalProduct.isPresent()) {
-            StockProduct productToDelete = optionalProduct.get();
-
-            stockProductRepository.delete(productToDelete);
-
-            return true;
-        }
-        return false;
-    }
-
 }

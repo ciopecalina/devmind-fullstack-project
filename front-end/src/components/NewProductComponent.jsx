@@ -8,7 +8,7 @@ const NewProductComponent = ({open, onClose, onSave}) => {
     const [unitPrice, setUnitPrice] = useState("");
 
     const vatRate = 0.19;
-    const totalNoVat = quantity && unitPrice ? (quantity * unitPrice).toFixed(2) : "0.00";
+    const totalNoVat = (quantity * unitPrice).toFixed(2);
     const vat = (totalNoVat * vatRate).toFixed(2);
     const totalWithVat = (parseFloat(totalNoVat) + parseFloat(vat)).toFixed(2);
 

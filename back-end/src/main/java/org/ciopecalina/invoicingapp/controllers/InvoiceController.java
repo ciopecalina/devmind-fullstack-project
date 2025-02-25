@@ -1,5 +1,6 @@
 package org.ciopecalina.invoicingapp.controllers;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.ciopecalina.invoicingapp.dtos.InvoiceDto;
 import org.ciopecalina.invoicingapp.models.Invoice;
@@ -23,7 +24,7 @@ public class InvoiceController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Invoice> createInvoice(@RequestBody InvoiceDto invoice) {
+    public ResponseEntity<Invoice> createInvoice(@Valid @RequestBody InvoiceDto invoice) {
         Invoice newInvoice = invoiceService.saveInvoice(invoice);
         return ResponseEntity.ok(newInvoice);
     }

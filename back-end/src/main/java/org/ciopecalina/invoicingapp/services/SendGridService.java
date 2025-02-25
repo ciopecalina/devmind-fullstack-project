@@ -55,7 +55,7 @@ public class SendGridService {
         StringBuilder contentSb = new StringBuilder();
         contentSb.append("You received the following invoice ")
                 .append(series)
-                .append(" - ")
+                .append("-")
                 .append(no)
                 .append(".").append("\n").append("\n")
                 .append("Please find the attached file.");

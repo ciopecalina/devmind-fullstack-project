@@ -1,5 +1,6 @@
 package org.ciopecalina.invoicingapp.controllers;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.ciopecalina.invoicingapp.dtos.*;
 import org.ciopecalina.invoicingapp.models.User;
@@ -42,7 +43,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponseDto> registerUser(@RequestBody UserRegistrationDto userRegistrationDto) {
+    public ResponseEntity<UserResponseDto> registerUser(@Valid @RequestBody UserRegistrationDto userRegistrationDto) {
         UserResponseDto userDto = userService.registerUser(userRegistrationDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
@@ -69,7 +70,6 @@ public class UserController {
 
     @GetMapping("users/get-user-details/{email}")
     public ResponseEntity<UserDetailsDto> getUserByEmail(@PathVariable String email) {
-        System.out.println("Received request for email: " + email);
 
         Optional<UserDetailsDto> userDto = userService.getUserDetailsByEmail(email);
         return userDto.map(ResponseEntity::ok)

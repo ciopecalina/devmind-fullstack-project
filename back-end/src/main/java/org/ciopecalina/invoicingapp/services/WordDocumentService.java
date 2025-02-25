@@ -120,6 +120,7 @@ public class WordDocumentService {
                             if (text.equals(placeholder))
                             {
                                 run.setText(newText, 0);
+                                return;
                             }
                         }
                     }

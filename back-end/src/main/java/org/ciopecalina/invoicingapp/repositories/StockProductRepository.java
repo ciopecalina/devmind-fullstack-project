@@ -9,11 +9,11 @@ import java.util.Optional;
 
 @Repository
 public interface StockProductRepository extends JpaRepository<StockProduct, Integer> {
-    List<StockProduct> findAllByUserId(int userId);
-    
-    boolean existsByIdAndUserId(int id, int userId);
+    List<StockProduct> findAllByUserId(Integer userId);
 
-    Optional<StockProduct> findByNameIsContainingIgnoreCaseAndUserId(String name, int userId);
+    boolean existsByIdAndUserId(Integer id, Integer userId);
+
+    Optional<StockProduct> findByNameIsContainingIgnoreCaseAndUserId(String name, Integer userId);
 
     void deleteByIdAndUserId(Integer productId, Integer userId);
 }

@@ -1,5 +1,6 @@
 package org.ciopecalina.invoicingapp.controllers;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.ciopecalina.invoicingapp.dtos.StockProductDto;
 import org.ciopecalina.invoicingapp.models.StockProduct;

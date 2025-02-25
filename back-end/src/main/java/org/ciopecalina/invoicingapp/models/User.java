@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
 import java.util.Set;
 
 @Getter
@@ -44,12 +45,10 @@ public class User {
     @Column(name = "bank")
     private String bank;
 
-    //    @JsonManagedReference
     @JsonIgnore
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<StockProduct> stockProducts;
 
-    //    @JsonManagedReference
     @JsonIgnore
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Invoice> invoices;
