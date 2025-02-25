@@ -12,7 +12,6 @@ const StockProductsComponent = () => {
     const [products, setProducts] = useState([]);
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [loading, setLoading] = useState(true);
-
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const fetchProducts = async () => {
@@ -37,7 +36,7 @@ const StockProductsComponent = () => {
             await deleteStockProduct(selectedProduct.id, user.id);
             fetchProducts();
         } catch (error) {
-            alert("Failed to delete product: " + error.message);
+            console.error("Failed to delete product: ", error);
         }
     };
 
@@ -50,7 +49,7 @@ const StockProductsComponent = () => {
     const columns = [
         {field: "id", headerName: "ID", width: 70},
         {field: "name", headerName: "Product Name", width: 250},
-        {field: "uom", headerName: "Unit", width: 100},
+        {field: "uom", headerName: "UOM", width: 100},
         {field: "quantity", headerName: "Quantity", width: 100},
         {field: "unitPrice", headerName: "Unit Price", width: 120},
         {field: "totalWithVat", headerName: "Total (With VAT)", width: 150},
@@ -79,30 +78,38 @@ const StockProductsComponent = () => {
                     Delete
                 </Button>
             </Box>
-
-            <DataGrid
-                rows={products}
-                columns={columns}
-                loading={loading}
-                onRowSelectionModelChange={(newSelection) => {
-                    if (newSelection.length > 0) {
-                        setSelectedProduct(products.find((p) => p.id === newSelection[0]) || null);
-                    } else {
-                        setSelectedProduct(null);
-                    }
-                }}
-                disableSelectionOnClick
-            />
-            {isModalOpen && (<NewProductComponent
-                    open={isModalOpen}
-                    onClose={() => {
-                        setIsModalOpen(false);
+            <div style={{height: 500, width: '100%'}}>
+                <DataGrid
+                    rows={products}
+                    columns={columns}
+                    loading={loading}
+                    onRowSelectionModelChange={(newSelection) => {
+                        if (newSelection.length > 0) {
+                            setSelectedProduct(products.find((p) => p.id == newSelection[0]) || null);
+                        } else {
+                            setSelectedProduct(null);
+                        }
                     }}
-                    onSave={handleSaveProduct}
+                    disableSelectionOnClick
+                    sx={{
+                        "& .MuiDataGrid-columnHeaders": {
+                            fontWeight: "bold",
+                            fontSize: "1rem"
+                        }
+
+                    }}
                 />
-            )}
+            </div>
+                {isModalOpen && (<NewProductComponent
+                        open={isModalOpen}
+                        onClose={() => {
+                            setIsModalOpen(false);
+                        }}
+                        onSave={handleSaveProduct}
+                    />
+                )}
         </Box>
-    );
+);
 };
 
 export default StockProductsComponent;

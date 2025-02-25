@@ -77,16 +77,18 @@ public class UserService {
         newUser.setEmail(userRegistrationDto.getEmail());
         newUser.setPassword(passwordEncoder.encode(userRegistrationDto.getPassword()));
         newUser.setName(userRegistrationDto.getName());
-        newUser.setFCode(userRegistrationDto.getFCode());
         newUser.setRegNo(userRegistrationDto.getRegNo());
         newUser.setIban(userRegistrationDto.getIban());
         newUser.setBank(userRegistrationDto.getBank());
+        newUser.setFCode(userRegistrationDto.getFCode());
         newUser.setIsApproved(false);
         newUser.setIsAdmin(false);
         newUser.setId(null);
 
         User savedUser = userRepository.save(newUser);
 
-        return new UserResponseDto(savedUser.getId(), savedUser.getName(), savedUser.getName(), savedUser.getIsApproved(), savedUser.getIsAdmin());
+        System.out.println(userRegistrationDto.getFCode());
+
+        return new UserResponseDto(savedUser.getId(), savedUser.getEmail(), savedUser.getName(), savedUser.getIsApproved(), savedUser.getIsAdmin());
     }
 }

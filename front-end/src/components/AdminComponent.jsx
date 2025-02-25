@@ -37,7 +37,7 @@ const AdminComponent = () => {
             await approveUser(selectedUser.id);
             fetchUsers();
         } catch (error) {
-            alert("Failed to approve user: " + error.message);
+            console.error("Failed to approve user: " + error.message);
         }
     };
 
@@ -46,7 +46,7 @@ const AdminComponent = () => {
             await deleteUser(selectedUser.id);
             fetchUsers();
         } catch (error) {
-            alert("Failed to delete user: " + error.message);
+            console.error("Failed to delete user: " + error.message);
         }
     };
 
@@ -122,7 +122,7 @@ const AdminComponent = () => {
                                 color="success"
                                 startIcon={<CheckCircleIcon/>}
                                 onClick={handleApprove}
-                                sx={{mr: 1}}
+                                sx={{mr: 2}}
                                 disabled={!selectedUser}
                             >
                                 Approve

@@ -40,8 +40,8 @@ public class WordDocumentService {
             findAndReplaceText(document, "<no>", invoice.getNumber());
             findAndReplaceText(document, "<d>", String.valueOf(invoice.getDate()));
             findAndReplaceText(document, "<tnv>", String.valueOf(invoice.getTotalNoVat()));
-            findAndReplaceText(document, "<tv>", String.valueOf(invoice.getTotalWithVat()));
-            findAndReplaceText(document, "<t>", String.valueOf(invoice.getVat()));
+            findAndReplaceText(document, "<twv>", String.valueOf(invoice.getTotalWithVat()));
+            findAndReplaceText(document, "<v>", String.valueOf(invoice.getVat()));
 
             // User data
             User user = invoice.getUser();
@@ -61,28 +61,17 @@ public class WordDocumentService {
 
             XWPFTable table = document.getTables().get(1);
 
-            int productIndex = 0;
+            int itemNo = 0;
+
             for (InvoiceProduct p : products) {
-                boolean rowFilled = false;
+                int rowIndex = 2 + itemNo;
 
-                for (XWPFTableRow row : table.getRows()) {
-                    if (isRowEmpty(row)) {
-                        fillRowWithData(row, p, productIndex);
-                        rowFilled = true;
-                        break;
-                    }
+                if (rowIndex < table.getRows().size()) {
+                    XWPFTableRow row = table.getRow(rowIndex);
+                    fillRow(row, p, itemNo);
                 }
 
-                if (!rowFilled) {
-                    for (XWPFTableRow row : table.getRows()) {
-                        if (!isRowEmpty(row)) {
-                            fillRowWithData(row, p, productIndex);
-                            break;
-                        }
-                    }
-                }
-
-                productIndex++;
+                itemNo++;
             }
 
             try (OutputStream out = new FileOutputStream(outputPath)) {
@@ -98,45 +87,39 @@ public class WordDocumentService {
         return null;
     }
 
-    private boolean isRowEmpty(XWPFTableRow row) {
-        for (XWPFTableCell cell : row.getTableCells()) {
-            String cellText = cell.getText();
-            if (cellText != null && !cellText.trim().isEmpty()) {
-                return false;
-            }
-        }
-        return true;
+    private void fillRow(XWPFTableRow row, InvoiceProduct p, int itemNo) {
+        fillCell(row.getCell(0), String.valueOf(itemNo + 1));
+        fillCell(row.getCell(1), p.getName());
+        fillCell(row.getCell(2), p.getUnitOfMeasurement());
+        fillCell(row.getCell(3), String.valueOf(p.getQuantity()));
+        fillCell(row.getCell(4), String.valueOf(p.getUnitPrice()));
+        fillCell(row.getCell(5), String.valueOf(p.getTotalNoVat()));
+        fillCell(row.getCell(6), String.valueOf(p.getVat()));
     }
 
-    private void fillRowWithData(XWPFTableRow row, InvoiceProduct p, int productIndex) {
-        setCellTextWithFont(row.getCell(0), String.valueOf(productIndex + 1));
-        setCellTextWithFont(row.getCell(1), p.getName());
-        setCellTextWithFont(row.getCell(2), p.getUnitOfMeasurement());
-        setCellTextWithFont(row.getCell(3), String.valueOf(p.getQuantity()));
-        setCellTextWithFont(row.getCell(4), String.valueOf(p.getUnitPrice()));
-        setCellTextWithFont(row.getCell(5), String.valueOf(p.getTotalNoVat()));
-        setCellTextWithFont(row.getCell(6), String.valueOf(p.getVat()));
-    }
-
-    private void setCellTextWithFont(XWPFTableCell cell, String text) {
+    private void fillCell(XWPFTableCell cell, String newText) {
         XWPFParagraph paragraph = cell.getParagraphs().get(0);
         XWPFRun run = paragraph.createRun();
-        run.setText(text);
+
+        run.setText(newText);
+
         run.setFontFamily("Arial");
         run.setBold(true);
-        run.setFontSize(9);
+        run.setFontSize(10);
     }
 
-    private void findAndReplaceText(XWPFDocument document, String placeholder, String replacement) {
+    private void findAndReplaceText(XWPFDocument document, String placeholder, String newText) {
         for (XWPFTable table : document.getTables()) {
             for (XWPFTableRow row : table.getRows()) {
                 for (XWPFTableCell cell : row.getTableCells()) {
-                    for (XWPFParagraph paragraph : cell.getParagraphs()) {
+                    for (XWPFParagraph paragraph : cell.getParagraphs())
+                    {
                         for (XWPFRun run : paragraph.getRuns()) {
                             String text = run.getText(0);
-                            if (text != null && text.contains(placeholder)) {
-                                text = text.replace(placeholder, replacement);
-                                run.setText(text, 0);
+
+                            if (text.equals(placeholder))
+                            {
+                                run.setText(newText, 0);
                             }
                         }
                     }
@@ -144,4 +127,5 @@ public class WordDocumentService {
             }
         }
     }
+
 }

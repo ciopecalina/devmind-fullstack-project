@@ -7,7 +7,6 @@ import InvoicesComponent from "./components/InvoicesComponent.jsx";
 import StockProductsComponent from "./components/StockProductsComponent.jsx";
 import LoginComponent from "./components/LoginComponent.jsx";
 import RegistrationComponent from "./components/RegistrationComponent.jsx";
-import PreviewInvoiceComponent from "./components/PreviewInvoiceComponent.jsx";
 import AdminComponent from "./components/AdminComponent.jsx";
 
 const router = createBrowserRouter([
@@ -24,8 +23,6 @@ const router = createBrowserRouter([
                 children: [
                     { path: "invoices", element: <InvoicesComponent /> },
                     { path: "stock", element: <StockProductsComponent /> },
-                    { path: "preview", element: <PreviewInvoiceComponent /> },
-
                 ],
             },
         ],

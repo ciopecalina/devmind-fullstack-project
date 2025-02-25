@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface InvoiceProductRepository extends JpaRepository<InvoiceProduct, Integer> {
-//    void deleteByUser(User user);
+
 }

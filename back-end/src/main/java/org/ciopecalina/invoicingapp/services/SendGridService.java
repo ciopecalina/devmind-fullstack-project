@@ -44,13 +44,26 @@ public class SendGridService {
         User client = userService.getUserByName(toStr);
 
         Email from = new Email(SENDER);
-        String subjectStr = "New invoice " + series + " - " + no;
 
-        String contentStr = "You received a new invoice. Please find the attached file.";
+        StringBuilder subjectSb = new StringBuilder();
+        subjectSb.append("You received a new invoice ")
+                .append(series)
+                .append(" - ")
+                .append(no)
+                .append(" via InvoicingApp! ");
+
+        StringBuilder contentSb = new StringBuilder();
+        contentSb.append("You received the following invoice ")
+                .append(series)
+                .append(" - ")
+                .append(no)
+                .append(".").append("\n").append("\n")
+                .append("Please find the attached file.");
+
         Email to = new Email(client.getEmail());
-        Content content = new Content("text/plain", contentStr);
+        Content content = new Content("text/plain", contentSb.toString());
 
-        Mail mail = new Mail(from, subjectStr, to, content);
+        Mail mail = new Mail(from, subjectSb.toString(), to, content);
 
         Path file = Paths.get(wordFilePath);
         Attachments attachments = new Attachments();
@@ -59,7 +72,7 @@ public class SendGridService {
         attachments.setDisposition("attachment");
 
         byte[] attachmentContentBytes = Files.readAllBytes(file);
-        String attachmentContent = Base64.getMimeEncoder().encodeToString(attachmentContentBytes);
+        String attachmentContent = Base64.getEncoder().encodeToString(attachmentContentBytes);
         attachments.setContent(attachmentContent);
         mail.addAttachments(attachments);
 

@@ -48,6 +48,7 @@ public class SecurityConfig {
                         .requestMatchers( "/users/**").hasRole("USER")
                         .requestMatchers( "/stock/**").hasRole("USER")
                         .requestMatchers( "/clients/**").hasRole("USER")
+                        .requestMatchers( "/preview/**").hasRole("USER")
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults());

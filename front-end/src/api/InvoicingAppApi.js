@@ -1,5 +1,7 @@
 const BASE_API = "http://localhost:8080";
 
+import {renderAsync} from "docx-preview";
+
 // Get header from sessionStorage
 const getAuthHeader = () => {
     return sessionStorage.getItem("authHeader") || "";
@@ -59,33 +61,6 @@ export const register = async (userData) => {
     }
 
     return response.json();
-};
-
-// Download Invoice
-export const downloadInvoice = async (invoiceId, invoiceSeries, invoiceNo) => {
-    try {
-        const response = await fetch(`${BASE_API}/document/download-document/${invoiceId}`, {
-            method: "GET",
-            headers: {
-                "Authorization": getAuthHeader(),
-            },
-        });
-
-        if (!response.ok) {
-            throw new Error("Failed to download invoice document");
-        }
-
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `Invoice_${invoiceSeries}-${invoiceNo}.docx`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-    } catch (error) {
-        console.error("Error downloading document:", error);
-    }
 };
 
 // Send Email
@@ -229,5 +204,87 @@ export const getClientsNames = async (userName) => {
     return await response.json();
 };
 
+//Add invoice
+export const saveInvoice = async (invoiceData) => {
+    const response = await fetch(`${BASE_API}/invoices/add`, {
+        method: "POST",
+        headers: {
+            "Authorization": getAuthHeader(),
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(invoiceData),
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to save invoice");
+    }
+
+    return response.json();
+};
+
+//Delete invoice
+export const deleteInvoice = async (invoiceId, userId) => {
+    const response = await fetch(`${BASE_API}/invoices/delete/${invoiceId}/${userId}`, {
+        method: "DELETE",
+        headers: {
+            Authorization: getAuthHeader(),
+        },
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to delete invoice");
+    }
+};
+// Download Invoice
+export const downloadInvoice = async (invoiceId, invoiceSeries, invoiceNo) => {
+    try {
+        const response = await fetch(`${BASE_API}/document/download-document/${invoiceId}`, {
+            method: "GET",
+            headers: {
+                "Authorization": getAuthHeader(),
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to download invoice document");
+        }
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `Invoice_${invoiceSeries}-${invoiceNo}.docx`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    } catch (error) {
+        console.error("Error downloading document:", error);
+    }
+};
 
 
+//Preview
+export const previewInvoice = async (invoiceId) => {
+    try {
+        const response = await fetch(`${BASE_API}/document/download-document/${invoiceId}`, {
+            method: "GET",
+            headers: {
+                "Authorization": getAuthHeader(),
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch invoice document");
+        }
+
+        const blob = await response.blob();
+        const div = document.createElement("div");
+
+        await renderAsync(blob, div);
+
+        return div.innerHTML;
+
+    } catch (error) {
+        console.error("Error previewing document: ", error);
+    }
+};

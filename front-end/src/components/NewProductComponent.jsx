@@ -2,8 +2,6 @@ import React, {useState} from "react";
 import {Box, Button, Modal, TextField, Typography} from "@mui/material";
 
 const NewProductComponent = ({open, onClose, onSave}) => {
-    const user = JSON.parse(sessionStorage.getItem("user"));
-
     const [name, setName] = useState("");
     const [uom, setUom] = useState("");
     const [quantity, setQuantity] = useState("");
@@ -45,8 +43,10 @@ const NewProductComponent = ({open, onClose, onSave}) => {
                 <Typography variant="h7">Add a new product</Typography>
                 <TextField label="Product Name" fullWidth value={name} onChange={(e) => setName(e.target.value)}/>
                 <TextField label="Unit of Measure" fullWidth value={uom} onChange={(e) => setUom(e.target.value)}/>
-                <TextField label="Quantity" type="number" fullWidth value={quantity} onChange={(e) => setQuantity(e.target.value)}/>
-                <TextField label="Unit Price" type="number" fullWidth value={unitPrice} onChange={(e) => setUnitPrice(e.target.value)}/>
+                <TextField label="Quantity" type="number" fullWidth value={quantity}
+                           onChange={(e) => setQuantity(e.target.value)}/>
+                <TextField label="Unit Price" type="number" fullWidth value={unitPrice}
+                           onChange={(e) => setUnitPrice(e.target.value)}/>
                 <Typography>Total (No VAT): {totalNoVat}</Typography>
                 <Typography>VAT: {vat}</Typography>
                 <Typography>Total (With VAT): {totalWithVat}</Typography>

@@ -1,46 +1,55 @@
-import React, { useState } from "react";
-import { Avatar, Box, Button, Container, Paper, TextField, Typography } from "@mui/material";
+import React, {useState} from "react";
+import {Avatar, Box, Button, Container, Paper, TextField, Typography} from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import backgroundImage from "../background.jpg";
+import {register} from "../api/InvoicingAppApi";
 
 const RegistrationComponent = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
+        name: "",
         email: "",
         password: "",
-        name: "",
         fCode: "",
         regNo: "",
         iban: "",
         bank: ""
     });
 
-    const [error, setError] = useState(null);
+    const [errors, setErrors] = useState({});
+
+    const validateFields = () => {
+        const newErrors = {
+            name: !formData.name.trim(),
+            email: !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim()),
+            password: !formData.password.trim(),
+            fCode: !(formData.fCode.trim().length >= 6 && formData.fCode.trim().length <= 9),
+            regNo: !(formData.regNo.trim().length >= 8 && formData.regNo.trim().length <= 13),
+            iban: formData.iban.trim().length !== 24,
+            bank: !formData.bank.trim()
+        };
+
+        setErrors(newErrors);
+        return !Object.values(newErrors).includes(true);
+    };
 
     const handleChange = (event) => {
-        setFormData({ ...formData, [event.target.name]: event.target.value });
+        setFormData({...formData, [event.target.name]: event.target.value});
+        setErrors({...errors, [event.target.name]: false});
     };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        setError(null);
+
+        if (!validateFields()) return;
 
         try {
-            const response = await fetch("http://localhost:8080/register", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData),
-            });
-
-            if (!response.ok) {
-                throw new Error("Registration failed. Email may already be in use.");
-            }
-
+            await register(formData);
             sessionStorage.clear();
             navigate("/login");
         } catch (error) {
-            setError(error.message);
+            console.error("Registration error:", error.message);
         }
     };
 
@@ -65,7 +74,7 @@ const RegistrationComponent = () => {
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
-                    filter: "blur(10px)",
+                    filter: "blur(3.5px)",
                     transform: "scale(1.1)",
                 }}
             />
@@ -77,26 +86,31 @@ const RegistrationComponent = () => {
                     backgroundColor: "rgba(0, 0, 0, 0.4)",
                 }}
             />
-            <Container maxWidth="xs" sx={{ position: "relative", zIndex: 1 }}>
-                <Paper elevation={10} sx={{ padding: 3, backdropFilter: "blur(5px)" }}>
-                    <Avatar sx={{ mx: "auto", textAlign: "center", mb: 1 }}>
-                        <LockOutlinedIcon />
+            <Container maxWidth="xs" sx={{position: "relative", zIndex: 1}}>
+                <Paper elevation={10} sx={{padding: 3, backdropFilter: "blur(5px)"}}>
+                    <Avatar sx={{mx: "auto", textAlign: "center", mb: 1}}>
+                        <LockOutlinedIcon/>
                     </Avatar>
-                    <Typography component="h1" variant="h5" sx={{ textAlign: "center" }}>
+                    <Typography component="h1" variant="h5" sx={{textAlign: "center"}}>
                         Register
                     </Typography>
 
-                    {error && <Typography color="error" textAlign="center">{error}</Typography>}
-
-                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 2 }}>
-                        <TextField label="Email" name="email" type="email" fullWidth required sx={{ mb: 2 }} value={formData.email} onChange={handleChange} />
-                        <TextField label="Password" name="password" type="password" fullWidth required sx={{ mb: 2 }} value={formData.password} onChange={handleChange} />
-                        <TextField label="Company Name" name="name" fullWidth required sx={{ mb: 2 }} value={formData.name} onChange={handleChange} />
-                        <TextField label="Fiscal Code" name="fCode" fullWidth required sx={{ mb: 2 }} value={formData.fCode} onChange={handleChange} />
-                        <TextField label="Registration Number" name="regNo" fullWidth required sx={{ mb: 2 }} value={formData.regNo} onChange={handleChange} />
-                        <TextField label="IBAN" name="iban" fullWidth required sx={{ mb: 2 }} value={formData.iban} onChange={handleChange} />
-                        <TextField label="Bank" name="bank" fullWidth required sx={{ mb: 2 }} value={formData.bank} onChange={handleChange} />
-                        <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
+                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{mt: 2}}>
+                        <TextField label="Email" name="email" type="email" fullWidth required sx={{mb: 2}}
+                                   value={formData.email} onChange={handleChange} error={errors.email}/>
+                        <TextField label="Password" name="password" type="password" fullWidth required sx={{mb: 2}}
+                                   value={formData.password} onChange={handleChange} error={errors.password}/>
+                        <TextField label="Company Name" name="name" fullWidth required sx={{mb: 2}}
+                                   value={formData.name} onChange={handleChange} error={errors.name}/>
+                        <TextField label="Fiscal Code (CUI)" name="fCode" fullWidth required sx={{mb: 2}}
+                                   value={formData.fCode} onChange={handleChange} error={errors.fCode}/>
+                        <TextField label="Registration Number" name="regNo" fullWidth required sx={{mb: 2}}
+                                   value={formData.regNo} onChange={handleChange} error={errors.regNo}/>
+                        <TextField label="IBAN" name="iban" fullWidth required sx={{mb: 2}}
+                                   value={formData.iban} onChange={handleChange} error={errors.iban}/>
+                        <TextField label="Bank" name="bank" fullWidth required sx={{mb: 2}}
+                                   value={formData.bank} onChange={handleChange} error={errors.bank}/>
+                        <Button type="submit" variant="contained" fullWidth sx={{mt: 2}}>
                             Register
                         </Button>
                     </Box>
