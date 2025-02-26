@@ -105,7 +105,7 @@ public class WordDocumentService {
 
         run.setFontFamily("Arial");
         run.setBold(true);
-        run.setFontSize(10);
+        run.setFontSize(9);
     }
 
     private void findAndReplaceText(XWPFDocument document, String placeholder, String newText) {
